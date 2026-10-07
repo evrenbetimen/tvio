@@ -1,0 +1,65 @@
+appId: com.tvio.app
+productName: tvio
+copyright: © 2026 tvio
+
+directories:
+  buildResources: build
+  output: dist
+
+files:
+  - src/**/*
+  - package.json
+  # hls.js vendor'da (src/vendor) duruyor; node_modules pakete girmez
+  - "!node_modules"
+  - "!**/*.map"
+  - "!scripts/**"
+  - "!dist/**"
+
+asar: true
+
+mac:
+  category: public.app-category.entertainment
+  icon: build/tvio.icns
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+  darkModeSupport: true
+  hardenedRuntime: false
+  gatekeeperAssess: false
+  notarize: false
+
+dmg:
+  title: tvio
+  backgroundColor: "#05070d"
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: tvio
+  uninstallDisplayName: tvio
+  artifactName: tvio-setup-${version}.exe
+  language: 1055
+
+linux:
+  icon: build/icon-1024.png
+  category: AudioVideo
+  target:
+    - AppImage

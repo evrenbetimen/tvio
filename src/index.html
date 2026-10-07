@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self' file: data: blob:; script-src 'self' file: 'unsafe-inline'; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob: https: http:; media-src 'self' file: blob: https: http:; connect-src 'self' file: http: https: data: blob:; font-src 'self' file: data:;"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tvio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="mode-browse" data-view="home" data-accent="cyan">
+
+  <!-- Arka plan ışıkları -->
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora__a"></span>
+    <span class="aurora__b"></span>
+    <span class="aurora__c"></span>
+    <span class="aurora__grid"></span>
+  </div>
+
+  <!-- Açılış perdesi -->
+  <div class="boot" id="boot">
+    <div class="boot__inner">
+      <div class="boot__logo">
+        <svg viewBox="0 0 48 48" width="54" height="54" aria-hidden="true">
+          <defs>
+            <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--accent)" />
+              <stop offset="100%" stop-color="var(--accent-2)" />
+            </linearGradient>
+          </defs>
+          <rect x="3" y="9" width="42" height="30" rx="9" fill="none" stroke="url(#bg1)" stroke-width="3" />
+          <path d="M20 18.5v11l10-5.5z" fill="url(#bg1)" />
+          <path d="M16 44h16" stroke="url(#bg1)" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="boot__name">tvio</div>
+      <div class="boot__bar"><i id="bootBar"></i></div>
+      <div class="boot__msg" id="bootMsg">Yayın motoru hazırlanıyor…</div>
+    </div>
+  </div>
+
+  <!-- Sol ray -->
+  <aside class="rail" id="rail">
+    <div class="rail__brand">
+      <div class="logo">
+        <svg viewBox="0 0 48 48" width="30" height="30" aria-hidden="true">
+          <rect x="3" y="9" width="42" height="30" rx="9" fill="none" stroke="currentColor" stroke-width="3.4" />
+          <path d="M20 18.5v11l10-5.5z" fill="currentColor" />
+        </svg>
+      </div>
+      <div class="brand">
+        <span class="brand__name">tvio</span>
+        <span class="brand__tag">IPTV STUDIO</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="mainNav">
+      <button class="nav__item is-active" data-nav="home">
+        <span class="ico" data-ico="home"></span><span class="nav__txt">Ana Sayfa</span>
+      </button>
+      <button class="nav__item" data-nav="library">
+        <span class="ico" data-ico="grid"></span><span class="nav__txt">Tüm Kanallar</span>
+        <span class="nav__count" id="countAll">0</span>
+      </button>
+      <button class="nav__item" data-nav="favorites">
+        <span class="ico" data-ico="star"></span><span class="nav__txt">Favoriler</span>
+        <span class="nav__count" id="countFav">0</span>
+      </button>
+      <button class="nav__item" data-nav="recent">
+        <span class="ico" data-ico="clock"></span><span class="nav__txt">Son İzlenenler</span>
+        <span class="nav__count" id="countRecent">0</span>
+      </button>
+    </nav>
+
+    <div class="rail__block">
+      <div class="rail__label">
+        <span>Kategoriler</span>
+        <button class="link-btn" id="btnAllCats">Tümü</button>
+      </div>
+      <div class="cats" id="catList"></div>
+    </div>
+
+    <div class="rail__foot">
+      <div class="rail__status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Bağlanıyor…</span>
+      </div>
+      <button class="nav__item" data-nav="settings">
+        <span class="ico" data-ico="sliders"></span><span class="nav__txt">Ayarlar</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- İçerik kabuğu -->
+  <div class="shell">
+    <header class="topbar" id="topbar">
+      <div class="topbar__lead">
+        <div class="winctl" id="winCtl" hidden>
+          <button data-win="minimize" title="Küçült"><span class="ico" data-ico="minus"></span></button>
+          <button data-win="maximize" title="Büyüt"><span class="ico" data-ico="square"></span></button>
+          <button data-win="close" title="Kapat"><span class="ico" data-ico="x"></span></button>
+        </div>
+        <div class="crumbs" id="crumbs">
+          <span class="crumbs__root">tvio</span>
+          <span class="crumbs__sep">/</span>
+          <span class="crumbs__now" id="crumbNow">Ana Sayfa</span>
+        </div>
+      </div>
+
+      <div class="search" id="searchBox">
+        <span class="ico search__ico" data-ico="search"></span>
+        <input id="search" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Kanal ara… (örn. TRT, beIN, CNN)" />
+        <button class="search__clear" id="searchClear" hidden title="Temizle">
+          <span class="ico" data-ico="x"></span>
+        </button>
+        <kbd class="search__kbd">⌘K</kbd>
+      </div>
+
+      <div class="topbar__tail">
+        <button class="icon-btn" id="btnRefresh" title="Listeyi yenile">
+          <span class="ico" data-ico="refresh"></span>
+        </button>
+        <button class="icon-btn" id="btnShortcuts" title="Kısayollar">
+          <span class="ico" data-ico="keyboard"></span>
+        </button>
+        <div class="clock">
+          <span id="clockTime">--:--</span>
+          <small id="clockDate"></small>
+        </div>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <!-- ANA SAYFA -->
+      <section class="view is-active" data-view="home" id="view-home">
+        <div class="hero" id="hero"></div>
+        <div class="chips" id="homeCats"></div>
+        <div id="homeRows"></div>
+      </section>
+
+      <!-- KÜTÜPHANE -->
+      <section class="view" data-view="library" id="view-library">
+        <div class="view__head">
+          <div class="view__titles">
+            <h1 id="libTitle">Tüm Kanallar</h1>
+            <p id="libMeta">Liste yükleniyor…</p>
+          </div>
+          <div class="filters">
+            <label class="field">
+              <span>Ülke</span>
+              <select id="selCountry"><option value="">Tümü</option></select>
+            </label>
+            <label class="field">
+              <span>Kalite</span>
+              <select id="selQuality">
+                <option value="">Tümü</option>
+                <option value="4K">4K / UHD</option>
+                <option value="1080p">Full HD 1080p</option>
+                <option value="HD">HD</option>
+                <option value="SD">SD</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Sırala</span>
+              <select id="selSort">
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+                <option value="cat">Kategoriye göre</option>
+                <option value="country">Ülkeye göre</option>
+              </select>
+            </label>
+            <button class="ghost-btn" id="btnResetFilters">Sıfırla</button>
+          </div>
+        </div>
+
+        <div class="grid" id="grid"></div>
+        <div class="grid__foot" id="gridFoot" hidden>
+          <button class="ghost-btn wide" id="btnMore">Daha fazla kanal göster</button>
+        </div>
+
+        <div class="empty" id="gridEmpty" hidden>
+          <div class="empty__ico"><span class="ico" data-ico="search"></span></div>
+          <h3>Sonuç bulunamadı</h3>
+          <p>Arama terimini veya filtreyi değiştirmeyi deneyin.</p>
+          <button class="ghost-btn" id="btnEmptyReset">Filtreleri sıfırla</button>
+        </div>
+      </section>
+
+      <!-- AYARLAR -->
+      <section class="view" data-view="settings" id="view-settings">
+        <div class="view__head">
+          <div class="view__titles">
+            <h1>Ayarlar</h1>
+            <p>tvio'yu kendi izleme alışkanlıklarınıza göre uyarlayın.</p>
+          </div>
+        </div>
+
+        <div class="settings">
+          <div class="panel">
+            <div class="panel__head">
+              <span class="panel__ico" data-ico="globe"></span>
+              <div><h2>Yayın kaynağı</h2><p>M3U playlist adresi veya yerel dosya</p></div>
+            </div>
+            <div class="row">
+              <label for="setUrl">M3U adresi</label>
+              <div class="inline">
+                <input id="setUrl" type="text" spellcheck="false" />
+                <button class="ghost-btn" id="setSaveUrl">Kaydet</button>
+                <button class="solid-btn" id="setReload">Yenile</button>
+              </div>
+            </div>
+            <div class="row">
+              <label>Yerel liste</label>
+              <div class="inline">
+                <button class="ghost-btn" id="setLocal">Dosya seç…</button>
+                <span class="hint" id="setSourceHint">—</span>
+              </div>
+            </div>
+            <div class="row">
+              <label>Önbellek</label>
+              <div class="inline">
+                <button class="ghost-btn danger" id="setClearCache">Önbelleği temizle</button>
+                <span class="hint" id="setCacheHint">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <span class="panel__ico" data-ico="play"></span>
+              <div><h2>Oynatma</h2><p>Kanal geçişleri ve tampon davranışı</p></div>
+            </div>
+            <div class="row">
+              <label for="setResume">Açılışta son kanalı devam ettir</label>
+              <label class="switch"><input type="checkbox" id="setResume" /><span></span></label>
+            </div>
+            <div class="row">
+              <label for="setAutoNext">Hatalı kanalda otomatik sonrakine geç</label>
+              <label class="switch"><input type="checkbox" id="setAutoNext" /><span></span></label>
+            </div>
+            <div class="row">
+              <label for="setRememberVolume">Ses seviyesini hatırla</label>
+              <label class="switch"><input type="checkbox" id="setRememberVolume" /><span></span></label>
+            </div>
+            <div class="row">
+              <label for="setBuffer">Canlı tampon <b id="bufferVal">12 sn</b></label>
+              <input class="range" type="range" id="setBuffer" min="6" max="60" step="2" />
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <span class="panel__ico" data-ico="spark"></span>
+              <div><h2>Görünüm</h2><p>Tema ve vurgu rengi</p></div>
+            </div>
+            <div class="row">
+              <label>Vurgu rengi</label>
+              <div class="swatches" id="accents">
+                <button class="swatch" data-accent="cyan" style="--sw:#22d3ee" title="Buz mavisi"></button>
+                <button class="swatch" data-accent="violet" style="--sw:#a78bfa" title="Menekşe"></button>
+                <button class="swatch" data-accent="lime" style="--sw:#a3e635" title="Neon yeşil"></button>
+                <button class="swatch" data-accent="amber" style="--sw:#fbbf24" title="Kehribar"></button>
+                <button class="swatch" data-accent="rose" style="--sw:#fb7185" title="Gül"></button>
+              </div>
+            </div>
+            <div class="row">
+              <label for="setGlass">Cam (blur) efekti</label>
+              <label class="switch"><input type="checkbox" id="setGlass" /><span></span></label>
+            </div>
+            <div class="row">
+              <label for="setMotion">Animasyonlar</label>
+              <label class="switch"><input type="checkbox" id="setMotion" /><span></span></label>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <span class="panel__ico" data-ico="keyboard"></span>
+              <div><h2>Klavye kısayolları</h2><p>Uzaktan kumanda gibi kullanın</p></div>
+            </div>
+            <div class="keys">
+              <div><kbd>Space</kbd><span>Oynat / Duraklat</span></div>
+              <div><kbd>F</kbd><span>Tam ekran</span></div>
+              <div><kbd>M</kbd><span>Sesi kapat / aç</span></div>
+              <div><kbd>↑</kbd><kbd>↓</kbd><span>Önceki / Sonraki kanal</span></div>
+              <div><kbd>←</kbd><kbd>→</kbd><span>Ses seviyesi</span></div>
+              <div><kbd>Esc</kbd><span>Oynatıcıyı küçült</span></div>
+              <div><kbd>⌘K</kbd><span>Kanal ara</span></div>
+              <div><kbd>R</kbd><span>Yayını yeniden yükle</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <span class="panel__ico" data-ico="info"></span>
+              <div><h2>Hakkında</h2><p>Sürüm ve lisans bilgileri</p></div>
+            </div>
+            <div class="about" id="aboutBox">Yükleniyor…</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="statusbar">
+      <button class="np" id="npBtn" title="Oynatıcıyı aç">
+        <span class="np__logo" id="npLogo"><span class="ico" data-ico="tv"></span></span>
+        <span class="np__txt">
+          <b id="npName">Kanal seçilmedi</b>
+          <small id="npMeta">Bir kanala tıklayın</small>
+        </span>
+      </button>
+
+      <div class="statusbar__mid">
+        <span class="badge live" id="npLive" hidden><i></i>CANLI</span>
+        <span class="statusbar__msg" id="statusMsg">Hazır</span>
+      </div>
+
+      <div class="statusbar__tail">
+        <div class="vol">
+          <button class="icon-btn sm" id="btnMute" title="Sessize al"><span class="ico" data-ico="volume"></span></button>
+          <input class="range vol__range" type="range" id="volume" min="0" max="100" value="80" />
+        </div>
+        <span class="sep"></span>
+        <span class="mini-meta" id="totalMeta">0 kanal</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- OYNATICI -->
+  <div class="stage stage--hidden" id="stage">
+    <div class="stage__video">
+      <video id="video" playsinline autoplay></video>
+      <div class="stage__noise"></div>
+
+      <div class="stage__top">
+        <div class="stage__id">
+          <span class="stage__logo" id="stLogo"></span>
+          <span class="stage__names">
+            <b id="stName">—</b>
+            <small id="stMeta">—</small>
+          </span>
+        </div>
+        <span class="badge live" id="stLive"><i></i>CANLI</span>
+        <div class="stage__topacts">
+          <button class="icon-btn sm" id="stFav" title="Favorilere ekle"><span class="ico" data-ico="star"></span></button>
+          <button class="icon-btn sm" id="stPip" title="Resim içinde resim"><span class="ico" data-ico="pip"></span></button>
+          <button class="icon-btn sm" id="stFull" title="Tam ekran"><span class="ico" data-ico="maximize"></span></button>
+          <button class="icon-btn sm" id="stClose" title="Kapat"><span class="ico" data-ico="x"></span></button>
+        </div>
+      </div>
+
+      <div class="stage__center" id="stCenter">
+        <div class="spinner" id="stSpinner" hidden><i></i><i></i><i></i></div>
+        <div class="stage__err" id="stError" hidden>
+          <div class="stage__errIco"><span class="ico" data-ico="alert"></span></div>
+          <b>Yayın açılamadı</b>
+          <p id="stErrorMsg">Kaynak şu anda yanıt vermiyor olabilir.</p>
+          <div class="stage__errActs">
+            <button class="solid-btn" id="stRetry">Tekrar dene</button>
+            <button class="ghost-btn" id="stNext">Sonraki kanal</button>
+          </div>
+        </div>
+        <button class="bigplay" id="stBigPlay" hidden><span class="ico" data-ico="play"></span></button>
+      </div>
+
+      <div class="stage__bottom">
+        <div class="ctrl">
+          <button class="icon-btn" id="stPrev" title="Önceki kanal"><span class="ico" data-ico="chevronUp"></span></button>
+          <button class="icon-btn" id="stPlay" title="Oynat / Duraklat"><span class="ico" data-ico="play"></span></button>
+          <button class="icon-btn" id="stNextCh" title="Sonraki kanal"><span class="ico" data-ico="chevronDown"></span></button>
+          <div class="ctrl__vol">
+            <button class="icon-btn" id="stMute" title="Sessize al"><span class="ico" data-ico="volume"></span></button>
+            <input class="range ctrl__range" type="range" id="stVolume" min="0" max="100" value="80" />
+          </div>
+          <div class="ctrl__live"><i></i><span id="stState">CANLI</span></div>
+          <div class="ctrl__spacer"></div>
+          <div class="ctrl__next" id="stNextInfo">
+            <small>SIRADAKİ</small><b>—</b>
+          </div>
+          <button class="icon-btn" id="stMini" title="Küçült"><span class="ico" data-ico="minimize"></span></button>
+        </div>
+        <div class="stage__buffer"><i id="stBuffer"></i></div>
+      </div>
+    </div>
+
+    <!-- Teatr yan paneli — .stage__video DIŞINDA, doğrudan #stage içinde
+         böylece position:absolute sağ kenarı (#stage) referans alır -->
+    <aside class="stage__panel" id="stagePanel">
+      <div class="sp__head">
+        <div class="sp__logo" id="spLogo"></div>
+        <h3 id="spName">—</h3>
+        <div class="sp__tags" id="spTags"></div>
+        <p id="spDesc">—</p>
+      </div>
+      <div class="sp__acts">
+        <button class="solid-btn wide" id="spFav"><span class="ico" data-ico="star"></span>Favorilere ekle</button>
+        <div class="sp__row">
+          <button class="ghost-btn" id="spOpen"><span class="ico" data-ico="external"></span>Tarayıcıda</button>
+          <button class="ghost-btn" id="spCopy"><span class="ico" data-ico="copy"></span>Bağlantıyı kopyala</button>
+        </div>
+      </div>
+      <div class="sp__list" id="spListWrap">
+        <div class="sp__label">AYNI KATEGORİDEN <span id="spCount">0</span></div>
+        <div id="spList"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Bildirimler -->
+  <div class="toasts" id="toasts"></div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal__back" data-close="1"></div>
+    <div class="modal__box">
+      <div class="modal__head">
+        <h3 id="modalTitle">Başlık</h3>
+        <button class="icon-btn sm" data-close="1"><span class="ico" data-ico="x"></span></button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="vendor/hls.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

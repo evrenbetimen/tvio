@@ -1,0 +1,28 @@
+{
+  "name": "tvio",
+  "version": "1.0.0",
+  "description": "tvio - 2027 nesil modern IPTV oynatıcı",
+  "main": "src/main.js",
+  "author": "tvio",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "electron scripts/smoke.js",
+    "inspect": "electron scripts/inspect.js",
+    "panelcheck": "electron scripts/panel-check.js",
+    "vendor": "node scripts/copy-vendor.js",
+    "postinstall": "node scripts/copy-vendor.js",
+    "icon": "electron scripts/make-icon.js",
+    "ico": "electron scripts/make-ico.js",
+    "dist:mac": "npm run icon && electron-builder --mac",
+    "dist:win": "npm run icon && npm run ico && electron-builder --win",
+    "dist": "npm run icon && npm run ico && electron-builder --mac --win"
+  },
+  "dependencies": {
+    "hls.js": "^1.5.20"
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  }
+}
