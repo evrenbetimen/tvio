@@ -25,6 +25,7 @@ npm start
 | --- | --- |
 | `npm start` | Uygulamayı başlat |
 | `npm test` | Duman testi (yükleme, filtre, favori, oynatma + ekran görüntüleri) |
+| `npm run test:unit` | Birim testleri (M3U ayrıştırma, önbellek, yardımcılar; Electron gerektirmez) |
 | `npm run inspect` | Yerleşim/tanılama çıktısı |
 | `npm run panelcheck` | Teatre yan paneli: geometri + sonsuz kaydırma doğrulaması |
 | `npm run vendor` | hls.js dosyasını yeniden kopyala |

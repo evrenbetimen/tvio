@@ -487,7 +487,10 @@
     });
 
     els.crumbNow.textContent = state.view === 'settings' ? 'Ayarlar' : libTitle();
-    if (state.view === 'library') renderLibrary();
+    if (state.view === 'library') {
+      renderCats(); // yan raydaki etkin kategori vurgusu güncel kalsın
+      renderLibrary();
+    }
     if (state.view === 'home') renderHome();
     els.content.scrollTop = 0;
   }

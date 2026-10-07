@@ -8,6 +8,7 @@
   "scripts": {
     "start": "electron .",
     "test": "electron scripts/smoke.js",
+    "test:unit": "node --test \"test/*.test.js\"",
     "inspect": "electron scripts/inspect.js",
     "panelcheck": "electron scripts/panel-check.js",
     "vendor": "node scripts/copy-vendor.js",
