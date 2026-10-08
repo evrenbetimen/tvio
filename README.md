@@ -94,7 +94,7 @@ npm start
 | `npm run inspect` | Yerleşim ve tanılama çıktısı |
 | `npm run panelcheck` | Sinema yan paneli: geometri ve sonsuz kaydırma doğrulaması |
 | `npm run vendor` | hls.js dosyasını yeniden kopyalar |
-| `npm run icon` | Uygulama ikonunu üretir (`build/icon-1024.png`, macOS'ta `.icns`) |
+| `npm run icon` | Uygulama ikonunu üretir (`build/icon-1024.png`, macOS'ta `.icns`); sürüm iş akışı için `assets/icon-1024.png` olarak kopyalayın |
 | `npm run ico` | Windows ikonu üretir (`build/icon.ico`, macOS gerektirir) |
 | `npm run dist:mac` | macOS paketleri (`.dmg` + `.zip`, x64 + arm64) |
 | `npm run dist:win` | Windows kurulum paketi (NSIS x64) |
@@ -140,7 +140,7 @@ Sürümler GitHub Actions ile otomatik paketlenir ([`release.yml`](.github/workf
 2. Değişikliği `main`'e birleştirin.
 3. *Actions → release → Run workflow* ile iş akışını başlatın (ya da `v1.2.0` etiketi gönderin).
 
-İş akışı macOS'ta ikonları üretir, macOS / Windows / Linux paketlerini ayrı makinelerde derler,
+İş akışı macOS'ta `assets/icon-1024.png` dosyasından `.icns` ve `.ico` ikonlarını türetir, macOS / Windows / Linux paketlerini ayrı makinelerde derler,
 `v<sürüm>` etiketiyle bir GitHub sürümü oluşturur ve sürüm notlarını CHANGELOG'dan alır.
 
 İmzalı dağıtım için `electron-builder.yml` içinde `mac.identity` / `mac.notarize` ve
