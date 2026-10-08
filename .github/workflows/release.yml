@@ -15,7 +15,7 @@ env:
 
 jobs:
   icons:
-    # ikon betikleri macOS'un sips/iconutil araçlarını kullanır
+    # .icns/.ico betikleri macOS'un sips/iconutil araçlarını kullanır
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
@@ -24,8 +24,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm run icon && npm run ico
+      # ana ikon repoda (assets/icon-1024.png, "npm run icon" ile üretilir);
+      # CI'da Electron penceresi açmadan yalnızca .icns ve .ico türetilir
+      - run: |
+          mkdir -p build
+          cp assets/icon-1024.png build/
+          node scripts/make-icns.js
+          node scripts/make-ico.js
       - uses: actions/upload-artifact@v4
         with:
           name: icons
