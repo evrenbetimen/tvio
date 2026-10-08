@@ -27,6 +27,9 @@ mac:
       arch: [x64, arm64]
   artifactName: ${productName}-${version}-${arch}-mac.${ext}
   darkModeSupport: true
+  # Apple Silicon imzasız uygulamayı "hasarlı" sayar; Developer ID olmadan
+  # ad-hoc imza ("-") ile en azından sağ tık → Aç ile açılabilir olur.
+  identity: "-"
   hardenedRuntime: false
   gatekeeperAssess: false
   notarize: false

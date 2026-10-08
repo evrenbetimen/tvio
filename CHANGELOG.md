@@ -2,6 +2,12 @@
 
 Bu dosyadaki her `## [sürüm]` bölümü, aynı sürümün GitHub sürüm notları olarak kullanılır.
 
+## [1.1.1] - 2026-10-08
+
+### Düzeltildi
+- macOS'ta (özellikle Apple Silicon) uygulama açılırken çıkan “tvio hasarlı ve açılamıyor” uyarısı:
+  paket artık ad-hoc imzalı. İlk açılışta sağ tıklayıp *Aç* demek yeterli.
+
 ## [1.1.0] - 2026-10-08
 
 ### Düzeltildi
