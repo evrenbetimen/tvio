@@ -25,6 +25,7 @@ mac:
       arch: [x64, arm64]
     - target: zip
       arch: [x64, arm64]
+  artifactName: ${productName}-${version}-${arch}-mac.${ext}
   darkModeSupport: true
   hardenedRuntime: false
   gatekeeperAssess: false
@@ -32,6 +33,7 @@ mac:
 
 dmg:
   title: tvio
+  artifactName: ${productName}-${version}-${arch}.${ext}
   backgroundColor: "#05070d"
   contents:
     - x: 130
@@ -61,5 +63,6 @@ nsis:
 linux:
   icon: build/icon-1024.png
   category: AudioVideo
+  artifactName: ${productName}-${version}-${arch}.${ext}
   target:
     - AppImage

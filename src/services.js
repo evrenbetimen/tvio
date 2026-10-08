@@ -60,7 +60,9 @@ async function fetchPlaylist(url) {
 
     return { ok: true, text: text, cached: false, stale: false, at: Date.now(), source: url };
   } catch (err) {
-    if (fs.existsSync(file)) {
+    // önbellek yalnızca aynı adresten indirildiyse kullanılır; başka bir listeyi
+    // yeni adresin içeriğiymiş gibi göstermeyelim
+    if (fs.existsSync(file) && meta && meta.url === url) {
       return {
         ok: true,
         text: fs.readFileSync(file, 'utf8'),
@@ -75,6 +77,21 @@ async function fetchPlaylist(url) {
   }
 }
 
+/**
+ * #EXTINF satırında öznitelikleri kanal adından ayıran virgülün konumu:
+ * tırnak dışındaki ilk virgül. Böylece "Fox 5, New York" gibi adlar bölünmez,
+ * tvg-name="A, B" gibi tırnaklı değerlerdeki virgüller de atlanır.
+ */
+function nameSeparator(line) {
+  let quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line.charAt(i);
+    if (c === '"') quoted = !quoted;
+    else if (c === ',' && !quoted) return i;
+  }
+  return -1;
+}
+
 /** #EXTM3U metnini kanal nesnelerine dönüştürür. */
 function parseM3U(text) {
   const lines = String(text || '').split(/\r?\n/);
@@ -87,7 +104,7 @@ function parseM3U(text) {
     if (!line) continue;
 
     if (line.indexOf('#EXTINF') === 0) {
-      const comma = line.lastIndexOf(',');
+      const comma = nameSeparator(line);
       const attrs = line.slice(0, comma >= 0 ? comma : line.length);
       const name = comma >= 0 ? line.slice(comma + 1).trim() : 'İsimsiz Kanal';
 

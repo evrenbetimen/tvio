@@ -88,7 +88,7 @@
       fatalTimer = setTimeout(() => {
         if (errorCard) {
           toast('warn', 'Kanal açılamadı, sonrakine geçiliyor…');
-          next();
+          step(1, { autoSkip: true });
         }
       }, 3200);
     }
@@ -224,7 +224,14 @@
       if (networkRetry < 2) {
         networkRetry++;
         status('Ağ hatası, yeniden deneniyor… (' + networkRetry + ')');
-        setTimeout(() => hls && hls.startLoad(), 700 * networkRetry);
+        // manifest hiç yüklenemediyse startLoad() bir şey yapmaz; kaynağı baştan yükle.
+        // Bu arada kanal değiştiyse eski örneğe dokunma.
+        const inst = hls;
+        setTimeout(() => {
+          if (!inst || inst !== hls) return;
+          if (detail.includes('manifest')) inst.loadSource(url);
+          else inst.startLoad();
+        }, 700 * networkRetry);
         return;
       }
       if (detail.includes('manifest')) {
@@ -273,7 +280,8 @@
     if (!ch || !ch.url) return;
 
     current = ch;
-    autoSkipCount = 0;
+    // otomatik geçişlerde sayaç sıfırlanmaz; yoksa 3 deneme sınırı hiç devreye girmez
+    if (!opts.autoSkip) autoSkipCount = 0;
     clearTimeout(fatalTimer);
 
     const info = catInfo(ch.group);
@@ -319,7 +327,6 @@
     el.stBigPlay.hidden = true;
     attach(ch.url);
     renderSideList();
-    updateStatusNow();
 
     const i = indexOf(ch);
     if (i >= 0) {
@@ -343,13 +350,13 @@
   function next() { step(1); }
   function prev() { step(-1); }
 
-  function step(dir) {
+  function step(dir, opts) {
     if (!list.length) return;
     let i = indexOf(current);
     if (i < 0) i = dir > 0 ? -1 : 0;
     const ni = (i + dir + list.length) % list.length;
     // mevcut modu koru: teatre girildiyse teatre, miniyse mini kalır
-    load(list[ni], { theater: mode === 'theater' });
+    load(list[ni], Object.assign({ theater: mode === 'theater' }, opts));
   }
 
   function updateNextInfo() {
@@ -415,11 +422,6 @@
         if (wrap.scrollTop + wrap.clientHeight > wrap.scrollHeight - 400) paintSide(SIDE_PAGE);
       });
     }, { passive: true });
-  }
-
-  function updateStatusNow() {
-    if (!current) return;
-    status('Oynatılıyor · ' + current.name);
   }
 
   /* ------------------------------------------------------------- favoriler */
@@ -639,6 +641,7 @@
       setIcon(el.stPlay, 'play');
       setIcon(el.stMute, 'volume');
       setVolume(settings.volume, false);
+      if (settings.rememberVolume) el.video.muted = !!settings.muted;
       updateMuteIcons();
       initEvents();
       setMode('hidden');

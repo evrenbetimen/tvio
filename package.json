@@ -1,6 +1,6 @@
 {
   "name": "tvio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "tvio - 2027 nesil modern IPTV oynatıcı",
   "main": "src/main.js",
   "author": "tvio",
@@ -8,6 +8,7 @@
   "scripts": {
     "start": "electron .",
     "test": "electron scripts/smoke.js",
+    "test:unit": "node --test \"test/*.test.js\"",
     "inspect": "electron scripts/inspect.js",
     "panelcheck": "electron scripts/panel-check.js",
     "vendor": "node scripts/copy-vendor.js",
