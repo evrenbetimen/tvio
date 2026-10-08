@@ -31,9 +31,11 @@ En güncel kurulum dosyaları **[Releases](https://github.com/evrenbetimen/tvio/
 | Windows 10/11 | `tvio-setup-<sürüm>.exe` | NSIS kurulum sihirbazı, Türkçe |
 | Linux | `tvio-<sürüm>-x86_64.AppImage` | `chmod +x` ile çalıştırılabilir yapın |
 
-> **İmzasız paketler hakkında:** Kurulum dosyaları kod imzası taşımaz.
-> **macOS**'ta ilk açılışta uygulamaya sağ tıklayıp *Aç* deyin ya da
-> *Sistem Ayarları → Gizlilik ve Güvenlik* üzerinden izin verin.
+> **İmza hakkında:** Paketler Apple/Microsoft geliştirici sertifikasıyla imzalı değildir.
+> **macOS** paketi ad-hoc imzalıdır: ilk açılışta uygulamaya sağ tıklayıp *Aç* deyin ya da
+> *Sistem Ayarları → Gizlilik ve Güvenlik → Yine de Aç* ile izin verin.
+> Yine de “hasarlı” uyarısı görürseniz (1.1.0 ve öncesi) Terminal'de
+> `xattr -cr /Applications/tvio.app` çalıştırın.
 > **Windows**'ta SmartScreen uyarısında *Ek bilgi → Yine de çalıştır* seçeneğini kullanın.
 
 ## Özellikler
@@ -159,7 +161,7 @@ Sürümler GitHub Actions ile otomatik paketlenir ([`release.yml`](.github/workf
 | --- | --- |
 | “Yayın listesi alınamadı” | İnternet bağlantınızı kontrol edin. Aynı adres daha önce indirildiyse önbellekten açılır. |
 | Kanal açılmıyor | Pek çok açık yayın coğrafi olarak kısıtlıdır veya geçici olarak kapalıdır. `R` ile yeniden deneyin ya da `↓` ile sıradaki kanala geçin. |
-| macOS “hasarlı/açılamıyor” uyarısı | Paket imzasızdır; sağ tıklayıp *Aç* deyin veya `xattr -cr /Applications/tvio.app` çalıştırın. |
+| macOS “hasarlı” veya “açılamıyor” uyarısı | Uygulamayı *Applications*'a taşıdıktan sonra Terminal'de `xattr -cr /Applications/tvio.app` çalıştırın, ardından sağ tıklayıp *Aç* deyin. |
 
 ## Lisans ve veri
 
