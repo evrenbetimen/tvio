@@ -34,19 +34,32 @@ app.whenReady().then(async () => {
   const file = path.join(outDir, 'icon.html');
   fs.writeFileSync(file, HTML(1024));
 
+  // Ekran dışı (offscreen) çizim: görünmez pencerede capturePage() başsız
+  // CI makinelerinde hiç dönmeyebiliyor; paint olayı her ortamda gelir.
   const win = new BrowserWindow({
     width: 1024,
     height: 1024,
     show: false,
     frame: false,
     transparent: true,
-    webPreferences: { sandbox: true },
+    webPreferences: { sandbox: true, offscreen: true },
   });
+  win.webContents.setFrameRate(10);
+
+  let last = null;
+  win.webContents.on('paint', (_e, _dirty, image) => { last = image; });
 
   await win.loadFile(file);
-  await new Promise((r) => setTimeout(r, 500));
+  await new Promise((r) => setTimeout(r, 800));
+  win.webContents.invalidate();
+  await new Promise((r) => setTimeout(r, 400));
 
-  const img = await win.webContents.capturePage();
+  const img = last && !last.isEmpty() ? last : await win.webContents.capturePage();
+  if (img.getSize().width !== 1024) {
+    console.error('[icon] beklenmeyen boyut:', JSON.stringify(img.getSize()));
+    app.exit(1);
+    return;
+  }
   fs.writeFileSync(path.join(outDir, 'icon-1024.png'), img.toPNG());
   console.log('[icon] icon-1024.png üretildi');
 
