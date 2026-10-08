@@ -116,10 +116,12 @@
 
   function minimize() {
     if (!current) return;
+    exitFullscreen();
     setMode('mini');
   }
 
   function close() {
+    exitFullscreen();
     clearTimeout(fatalTimer);
     destroyHls();
     try { el.video.pause(); } catch {}
@@ -470,9 +472,24 @@
 
   /* ------------------------------------------------------------ tam ekran */
 
+  /** Sahne tam ekrandaysa çıkar; küçült/kapat öncesi çağrılır. */
+  function exitFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
   function toggleFullscreen() {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else el.stage.requestFullscreen && el.stage.requestFullscreen().catch(() => {});
+    if (document.fullscreenElement) return exitFullscreen();
+    if (!current) return;
+    // mini oynatıcı tam ekrana küçük kutu olarak taşınmasın
+    if (mode !== 'theater') theater();
+    if (el.stage.requestFullscreen) el.stage.requestFullscreen().catch(() => {});
+  }
+
+  /** Tam ekran düğmesinin ikonu ve ipucu yalnızca sahnenin tam ekranını yansıtır. */
+  function syncFullscreenButton() {
+    const on = document.fullscreenElement === el.stage;
+    setIcon(el.stFull, on ? 'minimize' : 'maximize');
+    el.stFull.title = on ? 'Tam ekrandan çık' : 'Tam ekran';
   }
 
   async function togglePip() {
@@ -572,6 +589,7 @@
     el.stMute.addEventListener('click', toggleMute);
     el.btnMute.addEventListener('click', toggleMute);
     el.stFull.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', syncFullscreenButton);
     el.stPip.addEventListener('click', togglePip);
     el.stClose.addEventListener('click', close);
     el.stMini.addEventListener('click', minimize);
