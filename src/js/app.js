@@ -998,9 +998,6 @@
 
   function initWindowControls() {
     if (global.tvio.platform !== 'darwin') els.winCtl.hidden = false;
-    global.tvio.onFullscreen(function (isFs) {
-      $('stFull').innerHTML = icon(isFs ? 'minimize' : 'maximize');
-    });
   }
 
   /* ================================================================== başlangıç */

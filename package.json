@@ -1,6 +1,6 @@
 {
   "name": "tvio",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "tvio - 2027 nesil modern IPTV oynatıcı",
   "main": "src/main.js",
   "author": "tvio",

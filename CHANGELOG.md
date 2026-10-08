@@ -2,6 +2,16 @@
 
 Bu dosyadaki her `## [sürüm]` bölümü, aynı sürümün GitHub sürüm notları olarak kullanılır.
 
+## [1.1.2] - 2026-10-08
+
+### Düzeltildi
+- Tam ekrandayken *Küçült* butonu mini oynatıcıyı tam ekranda bırakıyordu; artık önce tam ekrandan çıkıyor.
+- Tam ekrandayken *Kapat* oynatıcıyı kapatıyor ama pencere tam ekranda takılı kalıyordu.
+- Mini oynatıcıdayken `F` tuşu küçük kutuyu tam ekrana taşıyordu; artık sinema görünümüne geçip tam ekran açılıyor.
+- Tam ekran düğmesinin ikonu ve ipucu yalnızca videonun tam ekran durumunu gösteriyor
+  (menüden pencere tam ekran yapılınca yanlışlıkla “çık” ikonu görünüyordu; ipucu hiç değişmiyordu).
+- hls.js'in arka plan işçisi güvenlik politikası yüzünden engelleniyordu; yayın çözümleme artık ana iş parçacığını yormuyor.
+
 ## [1.1.1] - 2026-10-08
 
 ### Düzeltildi
